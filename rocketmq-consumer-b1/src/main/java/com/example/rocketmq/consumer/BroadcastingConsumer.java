@@ -10,6 +10,9 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import java.util.List;
 
 /**
+ * 广播模式
+ * 消费者采用广播的方式消费消息，一条消息同一个消费者组中每个消费者都要消费
+ *
  * @Author songbo
  * @Date 2022/3/22 17:02
  * @Version 1.0

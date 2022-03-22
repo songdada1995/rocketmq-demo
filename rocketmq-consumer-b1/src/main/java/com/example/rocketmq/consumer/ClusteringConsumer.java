@@ -24,7 +24,7 @@ public class ClusteringConsumer {
         // 指定Namesrv地址信息.
         consumer.setNamesrvAddr("127.0.0.1:9876");
         // 订阅一个或者多个Topic，以及Tag来过滤需要消费的消息
-        consumer.subscribe("TopicTest", "TagB");
+        consumer.subscribe("TopicTest", "TagB"); // subExpression可用*做匹配
         //负载均衡模式消费
         consumer.setMessageModel(MessageModel.CLUSTERING);
         // 注册回调函数，处理消息
