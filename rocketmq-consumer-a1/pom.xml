@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>rocketmq-consumer-b1</artifactId>
+    <artifactId>rocketmq-consumer-a1</artifactId>
     <description>Demo project for Spring Boot</description>
 
     <properties>

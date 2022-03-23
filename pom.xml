@@ -17,7 +17,7 @@
 
     <modules>
         <module>rocketmq-producer-a1</module>
-        <module>rocketmq-consumer-b1</module>
+        <module>rocketmq-consumer-a1</module>
     </modules>
 
     <properties>
