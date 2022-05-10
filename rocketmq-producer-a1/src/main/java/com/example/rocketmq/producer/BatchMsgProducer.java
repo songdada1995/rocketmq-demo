@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 批量消息生产者
+ *
  * @author songbo
  * @version 1.0
  * @date 2022/5/10 21:58
