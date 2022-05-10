@@ -37,7 +37,7 @@ public class InOrderProducer {
             SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                 @Override
                 public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
-                    Long id = (Long) arg;  //根据订单id选择发送queue
+                    Long id = (Long) arg;  //根据订单id选择发送queue，取模结果相同的采用同一个queue
                     long index = id % mqs.size();
                     return mqs.get((int) index);
                 }

@@ -23,6 +23,7 @@
     <properties>
         <java.version>1.8</java.version>
         <rocketmq-client.version>4.9.3</rocketmq-client.version>
+        <hutool-all.version>5.7.22</hutool-all.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,13 @@
             <artifactId>rocketmq-client</artifactId>
             <version>${rocketmq-client.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool-all.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
