@@ -17,7 +17,7 @@ import java.util.List;
  * @Date 2022/3/22 16:58
  * @Version 1.0
  */
-public class ClusteringConsumer {
+public class SyncClusteringMsgConsumer {
     public static void main(String[] args) throws Exception {
         // 实例化消息生产者,指定组名
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("simple_sync_group");

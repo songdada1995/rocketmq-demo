@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @Date 2022/3/22 12:08
  * @Version 1.0
  */
-public class AsyncProducer {
+public class AsyncMsgProducer {
     public static void main(String[] args) throws Exception {
         // 实例化消息生产者Producer
         DefaultMQProducer producer = new DefaultMQProducer("simple_async_group");

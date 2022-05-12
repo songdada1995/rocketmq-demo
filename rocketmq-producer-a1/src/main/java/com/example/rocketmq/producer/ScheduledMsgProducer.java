@@ -6,7 +6,7 @@ import org.apache.rocketmq.common.message.Message;
 /**
  * 发送延时消息
  */
-public class ScheduledMessageProducer {
+public class ScheduledMsgProducer {
 
     public static void main(String[] args) throws Exception {
         // 实例化一个生产者来产生延时消息

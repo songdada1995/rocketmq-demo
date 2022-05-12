@@ -12,7 +12,7 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
  * @Date 2022/3/22 12:05
  * @Version 1.0
  */
-public class SyncProducer {
+public class SyncMsgProducer {
     public static void main(String[] args) throws Exception {
         // 实例化消息生产者Producer
         DefaultMQProducer producer = new DefaultMQProducer("simple_sync_group");

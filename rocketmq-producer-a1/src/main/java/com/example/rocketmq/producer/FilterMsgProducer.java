@@ -8,6 +8,11 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
 
 /**
  * 过滤消息生产者
+ * <p>
+ * 可修改/conf/broker.conf
+ * <p>
+ * #启用过滤消息
+ * enablePropertyFilter = true
  *
  * @author songbo
  * @version 1.0

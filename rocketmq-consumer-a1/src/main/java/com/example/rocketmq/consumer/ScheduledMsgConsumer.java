@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 延时消息消费者
  */
-public class ScheduledMessageConsumer {
+public class ScheduledMsgConsumer {
 
     public static void main(String[] args) throws Exception {
         // 实例化消费者

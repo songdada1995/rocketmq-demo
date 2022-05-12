@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 顺序消息生产者
  */
-public class InOrderProducer {
+public class InOrderMsgProducer {
 
     public static void main(String[] args) throws Exception {
         DefaultMQProducer producer = new DefaultMQProducer("simple_order_group");
@@ -24,7 +24,7 @@ public class InOrderProducer {
         String[] tags = new String[]{"TagA", "TagC", "TagD"};
 
         // 订单列表
-        List<OrderStep> orderList = new InOrderProducer().buildOrders();
+        List<OrderStep> orderList = new InOrderMsgProducer().buildOrders();
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

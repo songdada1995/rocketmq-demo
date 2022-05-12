@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 顺序消息消费者，带事务方式（应用可控制Offset什么时候提交）
  */
-public class InOrderConsumer {
+public class InOrderMsgConsumer {
 
     public static void main(String[] args) throws Exception {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("simple_order_group");
