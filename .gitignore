@@ -4,3 +4,7 @@
 /rocketmq-demo.iml
 /rocketmq-producer-a1/target/
 /rocketmq-producer-a1/rocketmq-producer-a1.iml
+/rocketmq-springboot-consumer-a1/target/
+/rocketmq-springboot-producer-a1/target/
+/rocketmq-springboot-consumer-a1/rocketmq-springboot-consumer-a1.iml
+/rocketmq-springboot-producer-a1/rocketmq-springboot-producer-a1.iml
