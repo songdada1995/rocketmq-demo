@@ -3,8 +3,11 @@ rocketmq-demo
 
 系统模块
 
-├── rocketmq-consumer-a1                      // Java
-├── rocketmq-producer-a1                      // Java
-├── rocketmq-springboot-consumer-a1           // SpringBoot
-├── rocketmq-springboot-producer-a1           // SpringBoot
-├──pom.xml                                    // 公共依赖
+rocketmq-consumer-a1                      // Java
+
+rocketmq-producer-a1                      // Java
+
+rocketmq-springboot-consumer-a1           // SpringBoot
+
+rocketmq-springboot-producer-a1           // SpringBoot
+
