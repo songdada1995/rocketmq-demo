@@ -99,7 +99,7 @@ public class TransactionMsgProducer {
         }
 
         /**
-         * 返回不同事务状态
+         * 校验事务状态
          * transactionCheckMax 默认为 15次
          *
          * @param msg

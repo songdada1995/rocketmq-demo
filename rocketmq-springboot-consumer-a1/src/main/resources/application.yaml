@@ -1,2 +1,43 @@
 server:
   port: 8082
+
+spring:
+  application:
+    name: rocketmq-consumer-a1
+
+rocketmq:
+  name-server: localhost:9876
+  consumer:
+    group: my-group1
+    topic: test
+    # default LitePullConsumer TLS
+    tlsEnable: false
+
+demo:
+  rocketmq:
+
+    topic: string-topic
+    bytesRequestTopic: bytesRequestTopic
+    stringRequestTopic: stringRequestTopic
+    objectRequestTopic: objectRequestTopic
+    genericRequestTopic: genericRequestTopic
+
+    bytesRequestConsumer: bytesRequestConsumer
+    stringRequestConsumer: stringRequestConsumer
+    objectRequestConsumer: objectRequestConsumer
+    genericRequestConsumer: genericRequestConsumer
+
+    orderTopic: order-paid-topic
+    msgExtTopic: message-ext-topic
+    transTopic: spring-transaction-topic
+    topic.user: user-topic
+    tag: tagA
+    # my Consumer TLS Listener
+    tlsEnable: false
+    # another nameserver different global
+    myNameServer: 127.0.0.1:9876
+
+  # ext rocketmq consumer template TLS
+  ext:
+    consumer:
+      tlsEnable: false

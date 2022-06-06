@@ -1,2 +1,33 @@
 server:
   port: 8081
+
+spring:
+  application:
+    name: rocketmq-producer-a1
+
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: my-group1
+    sendMessageTimeout: 300000
+    # default producer tls config
+    tls-enable: false
+
+# properties used in the application
+demo:
+  rocketmq:
+    topic: string-topic
+    topic.user: user-topic
+    orderTopic: order-paid-topic
+    msgExtTopic: message-ext-topic
+    transTopic: spring-transaction-topic
+
+    bytesRequestTopic: bytesRequestTopic:tagA
+    stringRequestTopic: stringRequestTopic:tagA
+    objectRequestTopic: objectRequestTopic:tagA
+    genericRequestTopic: genericRequestTopic:tagA
+
+    extNameServer: 127.0.0.1:9876
+    # self ext producer tls config
+    ext:
+      useTLS: false
