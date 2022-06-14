@@ -1,0 +1,84 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="/static/plugins/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/plugins/layer/layer.js"></script>
+    <link rel="stylesheet" href="/static/plugins/layer/skin/layer.css"/>
+    <link rel="shortcut icon" href="/static/icon/favicon.ico" type="image/x-icon"/>
+    <title>首页</title>
+    <style>
+        table, td, th {
+            border: 1px solid green;
+        }
+
+        th {
+            background-color: green;
+            color: white;
+        }
+    </style>
+</head>
+
+<div>
+    发送同步消息，传递字符串参数：<input id="msg1" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg1()"/>
+</div>
+
+<p/>
+
+<div>
+    发送同步消息，传递实体类参数：<input id="msg2" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg2()"/>
+</div>
+
+
+<script type="text/javascript">
+    function sendMsg1() {
+        let params = {"message": $("#msg1").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg1",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg2() {
+        let params = {"message": $("#msg2").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg2",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+
+</script>
+
+</html>

@@ -3,6 +3,7 @@ package com.example.rocketmq.domain;
 public class User {
     private String userName;
     private Byte userAge;
+    private String msg;
 
     public String getUserName() {
         return userName;
@@ -22,11 +23,21 @@ public class User {
         return this;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public User setMsg(String msg) {
+        this.msg = msg;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-            "userName='" + userName + '\'' +
-            ", userAge=" + userAge +
-            '}';
+                "userName='" + userName + '\'' +
+                ", userAge=" + userAge +
+                ", msg='" + msg + '\'' +
+                '}';
     }
 }
