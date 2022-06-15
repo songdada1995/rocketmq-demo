@@ -6,7 +6,8 @@
     <script type="text/javascript" src="/static/plugins/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/static/plugins/layer/layer.js"></script>
     <link rel="stylesheet" href="/static/plugins/layer/skin/layer.css"/>
-    <link rel="shortcut icon" href="/static/icon/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" th:href="@{/static/img/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/static/img/favicon.ico}"/>
     <title>首页</title>
     <style>
         table, td, th {
@@ -24,12 +25,85 @@
     发送同步消息，传递字符串参数：<input id="msg1" name="message"/>
     <input type="button" value="发送消息" onclick="sendMsg1()"/>
 </div>
-
 <p/>
-
 <div>
     发送同步消息，传递实体类参数：<input id="msg2" name="message"/>
     <input type="button" value="发送消息" onclick="sendMsg2()"/>
+</div>
+<p/>
+<div>
+    发送同步消息，构建消息体：<input id="msg3" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg3()"/>
+</div>
+<p/>
+<div>
+    发送同步消息，使用extRocketMQTemplate，string-topic：<input id="msg4" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg4()"/>
+</div>
+<p/>
+<div>
+    发送同步消息，使用rocketMQTemplate，string-topic：<input id="msg5" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg5()"/>
+</div>
+<p/>
+<div>
+    发送异步消息：<input id="msg6" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg6()"/>
+</div>
+<p/>
+<div>
+    发送消息，自动把参数转换为消息体：<input id="msg7" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg7()"/>
+</div>
+<p/>
+<div>
+    发送批量消息：<input id="msg8" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg8()"/>
+</div>
+<p/>
+<div>
+    发送批量顺序消息：<input id="msg9" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg9()"/>
+</div>
+<p/>
+<div>
+    发送事务消息 using rocketMQTemplate：<input id="msg10" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg10()"/>
+</div>
+<p/>
+<div>
+    发送事务消息 using extRocketMQTemplate：<input id="msg11" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg11()"/>
+</div>
+<p/>
+<div>
+    同步发送request并且等待String类型的返回值：<input id="msg12" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg12()"/>
+</div>
+<p/>
+<div>
+    同步发送请求，设置超时时间，并等待字节数组类型的返回值：<input id="msg13" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg13()"/>
+</div>
+<p/>
+<div>
+    同步发送请求，携带hashKey，指明返回值类型User，并等待User类型返回值：<input id="msg14" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg14()"/>
+</div>
+<p/>
+<div>
+    同步发送请求，设置超时时间，设置延迟级别，并接受泛型返回值：<input id="msg15" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg15()"/>
+</div>
+<p/>
+<div>
+    发送异步请求，并接受返回值。异步发送需要在回调的接口中指明返回值类型：<input id="msg16" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg16()"/>
+</div>
+<p/>
+<div>
+    发送异步请求，并接受返回User类型。异步发送需要在回调的接口中指明返回值类型：<input id="msg17" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg17()"/>
 </div>
 
 
@@ -78,6 +152,335 @@
         });
     }
 
+    function sendMsg3() {
+        let params = {"message": $("#msg3").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg3",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg4() {
+        let params = {"message": $("#msg4").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg4",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg5() {
+        let params = {"message": $("#msg5").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg5",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg6() {
+        let params = {"message": $("#msg6").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg6",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg7() {
+        let params = {"message": $("#msg7").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg7",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg8() {
+        let params = {"message": $("#msg8").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg8",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg9() {
+        let params = {"message": $("#msg9").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg9",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg10() {
+        let params = {"message": $("#msg10").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg10",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg11() {
+        let params = {"message": $("#msg11").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg11",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg12() {
+        let params = {"message": $("#msg12").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg12",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg13() {
+        let params = {"message": $("#msg13").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg13",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg14() {
+        let params = {"message": $("#msg14").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg14",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg15() {
+        let params = {"message": $("#msg15").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg15",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg16() {
+        let params = {"message": $("#msg16").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg16",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg17() {
+        let params = {"message": $("#msg17").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg17",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
 
 </script>
 
