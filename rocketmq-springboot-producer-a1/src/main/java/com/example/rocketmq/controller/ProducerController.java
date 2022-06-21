@@ -107,4 +107,9 @@ public class ProducerController {
         return providerService.msg17(message);
     }
 
+    @PostMapping(value = "/msg18")
+    public Responses msg18(@RequestBody MqMessage message) {
+        return providerService.msg18(message);
+    }
+
 }

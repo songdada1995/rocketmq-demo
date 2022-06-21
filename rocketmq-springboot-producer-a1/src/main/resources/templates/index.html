@@ -105,7 +105,11 @@
     发送异步请求，并接受返回User类型。异步发送需要在回调的接口中指明返回值类型：<input id="msg17" name="message"/>
     <input type="button" value="发送消息" onclick="sendMsg17()"/>
 </div>
-
+<p/>
+<div>
+    发送同步消息，消息消费异常情况：<input id="msg18" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg18()"/>
+</div>
 
 <script type="text/javascript">
     function sendMsg1() {
@@ -465,6 +469,28 @@
         $.ajax({
             type: "POST",
             url: "/provider/msg17",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg18() {
+        let params = {"message": $("#msg18").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg18",
             data: JSON.stringify(params),
             contentType: 'application/json', // 发送数据类型
             dataType: "json", // 返回数据类型

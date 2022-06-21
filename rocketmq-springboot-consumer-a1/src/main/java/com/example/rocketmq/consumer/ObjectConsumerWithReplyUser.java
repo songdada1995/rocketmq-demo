@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * The consumer that replying Object
+ * 带返回值（对象）的消费者
  */
 @Service
 @RocketMQMessageListener(topic = "${demo.rocketmq.objectRequestTopic}", consumerGroup = "${demo.rocketmq.objectRequestConsumer}", selectorExpression = "${demo.rocketmq.tag}")

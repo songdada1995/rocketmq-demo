@@ -43,7 +43,7 @@
 //    private String springTransTopic;
 //    @Value("${demo.rocketmq.topic}")
 //    private String springTopic;
-//    @Value("${demo.rocketmq.topic.user}")
+//    @Value("${demo.rocketmq.user-topic}")
 //    private String userTopic;
 //
 //    @Value("${demo.rocketmq.orderTopic}")

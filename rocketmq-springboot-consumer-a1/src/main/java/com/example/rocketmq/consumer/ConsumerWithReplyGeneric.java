@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * The consumer that replying generic type
+ * 带返回值（泛型）的消费者
  */
 @Service
 @RocketMQMessageListener(topic = "${demo.rocketmq.genericRequestTopic}", consumerGroup = "${demo.rocketmq.genericRequestConsumer}", selectorExpression = "${demo.rocketmq.tag}")

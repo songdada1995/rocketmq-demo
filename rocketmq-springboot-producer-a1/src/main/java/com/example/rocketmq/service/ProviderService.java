@@ -38,8 +38,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ProviderService {
 
     @Value("${demo.rocketmq.topic}")
-    private String springTopic;
-    @Value("${demo.rocketmq.topic.user}")
+    private String stringTopic;
+    @Value("${demo.rocketmq.user-topic}")
     private String userTopic;
     @Value("${demo.rocketmq.orderTopic}")
     private String orderPaidTopic;
@@ -55,6 +55,8 @@ public class ProviderService {
     private String objectRequestTopic;
     @Value("${demo.rocketmq.genericRequestTopic}")
     private String genericRequestTopic;
+    @Value("${demo.rocketmq.exception-topic}")
+    private String exceptionTopic;
 
     @Resource
     private RocketMQTemplate rocketMQTemplate;
@@ -63,8 +65,8 @@ public class ProviderService {
 
     public Responses msg1(MqMessage message) {
         // 发送同步消息，传递字符串参数
-        SendResult sendResult = rocketMQTemplate.syncSend(springTopic, "Hello, " + message.getMessage());
-        System.out.printf("syncSend1 to topic %s sendResult=%s %n", springTopic, sendResult);
+        SendResult sendResult = rocketMQTemplate.syncSend(stringTopic, "Hello, " + message.getMessage());
+        System.out.printf("syncSend1 to topic %s sendResult=%s %n", stringTopic, sendResult);
         return Responses.newInstance().succeed("执行成功！");
     }
 
@@ -87,16 +89,16 @@ public class ProviderService {
 
     public Responses msg4(MqMessage message) {
         // 发送同步消息，使用extRocketMQTemplate，string-topic
-        SendResult sendResult = extRocketMQTemplate.syncSend(springTopic, MessageBuilder.withPayload(("Hello, " + message.getMessage()).getBytes()).build());
-        System.out.printf("extRocketMQTemplate.syncSend1 to topic %s sendResult=%s %n", springTopic, sendResult);
+        SendResult sendResult = extRocketMQTemplate.syncSend(stringTopic, MessageBuilder.withPayload(("Hello, " + message.getMessage()).getBytes()).build());
+        System.out.printf("extRocketMQTemplate.syncSend1 to topic %s sendResult=%s %n", stringTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg5(MqMessage message) {
         // 发送同步消息，使用rocketMQTemplate，string-topic
-        SendResult sendResult = rocketMQTemplate.syncSend(springTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
-        System.out.printf("syncSend2 to topic %s sendResult=%s %n", springTopic, sendResult);
+        SendResult sendResult = rocketMQTemplate.syncSend(stringTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
+        System.out.printf("syncSend2 to topic %s sendResult=%s %n", stringTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
@@ -136,7 +138,7 @@ public class ProviderService {
                     setHeader(RocketMQHeaders.KEYS, "KEY_" + i).build());
         }
 
-        SendResult sr = rocketMQTemplate.syncSend(springTopic, msgs, 60000);
+        SendResult sr = rocketMQTemplate.syncSend(stringTopic, msgs, 60000);
         System.out.printf("--- Batch messages send result :" + sr);
 
         return Responses.newInstance().succeed("执行成功！");
@@ -154,7 +156,7 @@ public class ProviderService {
                         setHeader(RocketMQHeaders.KEYS, "KEY_" + msgIndex).build());
             }
             // 相同hashKey，固定消息发送到同一个队列
-            SendResult sr = rocketMQTemplate.syncSendOrderly(springTopic, msgs, String.valueOf(q), 60000);
+            SendResult sr = rocketMQTemplate.syncSendOrderly(stringTopic, msgs, String.valueOf(q), 60000);
             System.out.println("--- Batch messages orderly to queue :" + sr.getMessageQueue().getQueueId() + " send result :" + sr);
         }
 
@@ -288,6 +290,14 @@ public class ProviderService {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Responses msg18(MqMessage message) {
+        // 发送同步消息，使用rocketMQTemplate，string-topic
+        SendResult sendResult = rocketMQTemplate.syncSend(exceptionTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
+        System.out.printf("syncSend2 to topic %s sendResult=%s %n", exceptionTopic, sendResult);
+
+        return Responses.newInstance().succeed("执行成功！");
     }
 
     /**

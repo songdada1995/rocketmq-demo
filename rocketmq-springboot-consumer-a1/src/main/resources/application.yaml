@@ -15,22 +15,23 @@ rocketmq:
 
 demo:
   rocketmq:
-
     topic: string-topic
-    bytesRequestTopic: bytesRequestTopic
-    stringRequestTopic: stringRequestTopic
-    objectRequestTopic: objectRequestTopic
-    genericRequestTopic: genericRequestTopic
-
-    bytesRequestConsumer: bytesRequestConsumer
-    stringRequestConsumer: stringRequestConsumer
-    objectRequestConsumer: objectRequestConsumer
-    genericRequestConsumer: genericRequestConsumer
-
+    user-topic: user-topic
     orderTopic: order-paid-topic
     msgExtTopic: message-ext-topic
     transTopic: spring-transaction-topic
-    topic.user: user-topic
+    exception-topic: exception-topic
+
+    bytesRequestTopic: bytesRequestTopic
+    genericRequestTopic: genericRequestTopic
+    objectRequestTopic: objectRequestTopic
+    stringRequestTopic: stringRequestTopic
+
+    bytesRequestConsumer: bytesRequestConsumer
+    genericRequestConsumer: genericRequestConsumer
+    objectRequestConsumer: objectRequestConsumer
+    stringRequestConsumer: stringRequestConsumer
+
     tag: tagA
     # my Consumer TLS Listener
     tlsEnable: false
