@@ -40,6 +40,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- hutool工具依赖 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

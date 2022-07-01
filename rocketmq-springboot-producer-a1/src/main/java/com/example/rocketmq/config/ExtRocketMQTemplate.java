@@ -10,7 +10,8 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
  * 因为MQBroker会反向调用同一个producerGroup下的某个checkLocalTransactionState方法, 不同流程使用相同的producerGroup的话, 方法可能会调用错
  */
 @ExtRocketMQTemplateConfiguration(
-        nameServer = "${demo.rocketmq.extNameServer}",
-        tlsEnable = "${demo.rocketmq.ext.useTLS}")
+        nameServer = "${demo.rocketmq.ext.nameServer}",
+        tlsEnable = "${demo.rocketmq.ext.useTLS}",
+        group = "${demo.rocketmq.producer.group}")
 public class ExtRocketMQTemplate extends RocketMQTemplate {
 }

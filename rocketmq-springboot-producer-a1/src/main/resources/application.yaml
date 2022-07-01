@@ -11,6 +11,7 @@ rocketmq:
     group: my-group1
     sendMessageTimeout: 300000
     # default producer tls config
+    # TLS 通信加密
     tls-enable: false
 
 # properties used in the application
@@ -28,7 +29,9 @@ demo:
     objectRequestTopic: objectRequestTopic:tagA
     genericRequestTopic: genericRequestTopic:tagA
 
-    extNameServer: 127.0.0.1:9876
     # self ext producer tls config
     ext:
       useTLS: false
+      nameServer: 127.0.0.1:9876
+    producer:
+      group: demo-producer-group

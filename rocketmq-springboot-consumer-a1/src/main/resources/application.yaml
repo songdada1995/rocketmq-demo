@@ -20,7 +20,6 @@ demo:
     orderTopic: order-paid-topic
     msgExtTopic: message-ext-topic
     transTopic: spring-transaction-topic
-    exception-topic: exception-topic
 
     bytesRequestTopic: bytesRequestTopic
     genericRequestTopic: genericRequestTopic
@@ -37,6 +36,9 @@ demo:
     tlsEnable: false
     # another nameserver different global
     myNameServer: 127.0.0.1:9876
+
+    consumer:
+      group: demo-consumer-group
 
   # ext rocketmq consumer template TLS
   ext:

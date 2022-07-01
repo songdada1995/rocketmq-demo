@@ -72,39 +72,48 @@ public class ProviderService {
 
     public Responses msg2(MqMessage message) {
         // 发送同步消息，传递实体类参数
-        SendResult sendResult = rocketMQTemplate.syncSend(userTopic, new User().setUserAge((byte) 18).setUserName("Kitty").setMsg(message.getMessage()));
+        SendResult sendResult = rocketMQTemplate.syncSend(userTopic,
+                new User().setUserAge((byte) 18).setUserName("Kitty").setMsg(message.getMessage()));
         System.out.printf("syncSend1 to topic %s sendResult=%s %n", userTopic, sendResult);
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg3(MqMessage message) {
-        // 发送同步消息，构建消息体
-        SendResult sendResult = rocketMQTemplate.syncSend(userTopic, MessageBuilder.withPayload(
-                new User().setUserAge((byte) 21).setUserName("Lester").setMsg(message.getMessage()))
-                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE).build());
+        // 发送同步消息，构建消息体，携带自定义的header
+        SendResult sendResult = rocketMQTemplate.syncSend(userTopic,
+                MessageBuilder.withPayload(new User().setUserAge((byte) 21).setUserName("Lester").setMsg(message.getMessage()))
+                        .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE).build());
         System.out.printf("syncSend1 to topic %s sendResult=%s %n", userTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg4(MqMessage message) {
-        // 发送同步消息，使用extRocketMQTemplate，string-topic
-        SendResult sendResult = extRocketMQTemplate.syncSend(stringTopic, MessageBuilder.withPayload(("Hello, " + message.getMessage()).getBytes()).build());
+        // 发送同步消息，构建消息体，使用extRocketMQTemplate，string-topic
+        SendResult sendResult = extRocketMQTemplate.syncSend(stringTopic,
+                MessageBuilder.withPayload(("Hello, " + message.getMessage()).getBytes()).build());
         System.out.printf("extRocketMQTemplate.syncSend1 to topic %s sendResult=%s %n", stringTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg5(MqMessage message) {
-        // 发送同步消息，使用rocketMQTemplate，string-topic
-        SendResult sendResult = rocketMQTemplate.syncSend(stringTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
+        // 发送同步消息，构建消息体，使用rocketMQTemplate，string-topic
+        SendResult sendResult = rocketMQTemplate.syncSend(stringTopic,
+                MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
         System.out.printf("syncSend2 to topic %s sendResult=%s %n", stringTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /**
+     * 发送异步消息，有回调
+     *
+     * @param message
+     * @return
+     */
     public Responses msg6(MqMessage message) {
-        // 发送异步消息
+
         rocketMQTemplate.asyncSend(orderPaidTopic, new OrderPaidEvent("T_001", new BigDecimal("88.00"), message.getMessage()), new SendCallback() {
             @Override
             public void onSuccess(SendResult var1) {
@@ -122,7 +131,9 @@ public class ProviderService {
 
     public Responses msg7(MqMessage message) {
         // 发送消息，自动把参数转换为消息体
-        rocketMQTemplate.convertAndSend(msgExtTopic + ":tag0", "I'm from tag0，" + message.getMessage());  // tag0 will not be consumer-selected
+
+        // tag0 will not be consumer-selected
+        rocketMQTemplate.convertAndSend(msgExtTopic + ":tag0", "I'm from tag0，" + message.getMessage());
         System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag0");
         rocketMQTemplate.convertAndSend(msgExtTopic + ":tag1", "I'm from tag1，" + message.getMessage());
         System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag1");
@@ -177,6 +188,8 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /* =======================================带返回值的消息 Start======================================== */
+
     public Responses msg12(MqMessage message) {
         // 同步发送request并且等待String类型的返回值
         String replyString = rocketMQTemplate.sendAndReceive(stringRequestTopic, "request string, " + message.getMessage(), String.class);
@@ -214,34 +227,47 @@ public class ProviderService {
 
     public Responses msg16(MqMessage message) {
         // 发送异步请求，并接受返回值。异步发送需要在回调的接口中指明返回值类型
-        rocketMQTemplate.sendAndReceive(stringRequestTopic, message.getMessage() + ", request string", new RocketMQLocalRequestCallback<String>() {
-            @Override
-            public void onSuccess(String message) {
-                System.out.printf("send %s and receive %s %n", "request string", message);
-            }
+        rocketMQTemplate.sendAndReceive(stringRequestTopic, message.getMessage() + ", request string",
+                new RocketMQLocalRequestCallback<String>() {
+                    @Override
+                    public void onSuccess(String message) {
+                        System.out.printf("send %s and receive %s %n", "request string", message);
+                    }
 
-            @Override
-            public void onException(Throwable e) {
-                e.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onException(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg17(MqMessage message) {
         // 发送异步请求，并接受返回User类型。异步发送需要在回调的接口中指明返回值类型
-        rocketMQTemplate.sendAndReceive(objectRequestTopic, new User().setUserAge((byte) 9).setUserName("requestUserName").setMsg(message.getMessage()), new RocketMQLocalRequestCallback<User>() {
-            @Override
-            public void onSuccess(User message) {
-                System.out.printf("send user object and receive %s %n", message.toString());
-            }
+        rocketMQTemplate.sendAndReceive(objectRequestTopic, new User().setUserAge((byte) 9).setUserName("requestUserName").setMsg(message.getMessage()),
+                new RocketMQLocalRequestCallback<User>() {
+                    @Override
+                    public void onSuccess(User message) {
+                        System.out.printf("send user object and receive %s %n", message.toString());
+                    }
 
-            @Override
-            public void onException(Throwable e) {
-                e.printStackTrace();
-            }
-        }, 5000);
+                    @Override
+                    public void onException(Throwable e) {
+                        e.printStackTrace();
+                    }
+                }, 5000);
+
+        return Responses.newInstance().succeed("执行成功！");
+    }
+
+    /* =======================================带返回值的消息 End======================================== */
+
+
+    public Responses msg18(MqMessage message) {
+        // 发送同步消息，使用rocketMQTemplate，string-topic
+        SendResult sendResult = rocketMQTemplate.syncSend(exceptionTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
+        System.out.printf("syncSend2 to topic %s sendResult=%s %n", exceptionTopic, sendResult);
 
         return Responses.newInstance().succeed("执行成功！");
     }
@@ -290,14 +316,6 @@ public class ProviderService {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Responses msg18(MqMessage message) {
-        // 发送同步消息，使用rocketMQTemplate，string-topic
-        SendResult sendResult = rocketMQTemplate.syncSend(exceptionTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
-        System.out.printf("syncSend2 to topic %s sendResult=%s %n", exceptionTopic, sendResult);
-
-        return Responses.newInstance().succeed("执行成功！");
     }
 
     /**

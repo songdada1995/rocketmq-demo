@@ -32,7 +32,8 @@ import org.springframework.stereotype.Service;
  * MessageExtConsumer, consume listener impl class.
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.msgExtTopic}", selectorExpression = "tag0||tag1", consumerGroup = "${spring.application.name}-message-ext-consumer")
+@RocketMQMessageListener(topic = "${demo.rocketmq.msgExtTopic}", selectorExpression = "tag0||tag1",
+        consumerGroup = "${spring.application.name}-message-ext-consumer")
 public class MessageExtConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired
@@ -50,7 +51,7 @@ public class MessageExtConsumer implements RocketMQListener<MessageExt>, RocketM
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
         consumer.setConsumeTimestamp(UtilAll.timeMillisToHumanString3(System.currentTimeMillis()));
         // 设置最大重试次数.默认16次
-        consumer.setMaxReconsumeTimes(10);
+        consumer.setMaxReconsumeTimes(3);
         // 配置重试消息逻辑,默认是context.setDelayLevelWhenNextConsume(0);
         consumer.setMessageListener(customMessageListenerConcurrently);
     }
