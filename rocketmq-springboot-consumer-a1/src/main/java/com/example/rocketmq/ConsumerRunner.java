@@ -21,6 +21,12 @@ public class ConsumerRunner implements CommandLineRunner {
     @Resource(name = "extRocketMQTemplate")
     private RocketMQTemplate extRocketMQTemplate;
 
+    /**
+     * 拉取消息
+     *
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
         //This is an example of pull consumer using rocketMQTemplate.

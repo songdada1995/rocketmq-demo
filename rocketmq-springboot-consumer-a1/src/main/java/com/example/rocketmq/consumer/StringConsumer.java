@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
  * StringConsumer
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.topic}", consumerGroup = "${demo.rocketmq.consumer.group}",
-        selectorExpression = "${demo.rocketmq.tag}", tlsEnable = "${demo.rocketmq.tlsEnable}")
+@RocketMQMessageListener(topic = "${demo.rocketmq.topic}", selectorExpression = "${demo.rocketmq.tag}",
+        consumerGroup = "${demo.rocketmq.consumer.group}", tlsEnable = "${demo.rocketmq.tlsEnable}")
 public class StringConsumer implements RocketMQListener<String> {
     @Override
     public void onMessage(String message) {

@@ -31,14 +31,24 @@ demo:
     objectRequestConsumer: objectRequestConsumer
     stringRequestConsumer: stringRequestConsumer
 
+    consumer:
+      group: demo-consumer-group
+    order-consumer:
+      group: order-paid-consumer-group
+    trans-consumer:
+      group: string-trans-consumer-group
+    user-consumer:
+      group: user-consumer-group
+    string-newns-consumer:
+      group: string-newns-consumer-group
+    message-ext-consumer:
+      group: message-ext-consumer-group
+
     tag: tagA
     # my Consumer TLS Listener
     tlsEnable: false
     # another nameserver different global
     myNameServer: 127.0.0.1:9876
-
-    consumer:
-      group: demo-consumer-group
 
   # ext rocketmq consumer template TLS
   ext:

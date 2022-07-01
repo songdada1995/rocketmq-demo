@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RocketMQMessageListener(topic = "${demo.rocketmq.msgExtTopic}", selectorExpression = "tag0||tag1",
-        consumerGroup = "${spring.application.name}-message-ext-consumer")
+        consumerGroup = "${demo.rocketmq.message-ext-consumer.group}")
 public class MessageExtConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     @Autowired

@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
  * The consumer that replying String
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.stringRequestTopic}", consumerGroup = "${demo.rocketmq.stringRequestConsumer}",
-    selectorExpression = "${demo.rocketmq.tag}", replyTimeout = 10000)
+@RocketMQMessageListener(topic = "${demo.rocketmq.stringRequestTopic}", selectorExpression = "${demo.rocketmq.tag}",
+        consumerGroup = "${demo.rocketmq.stringRequestConsumer}", replyTimeout = 10000)
 public class StringConsumerWithReplyString implements RocketMQReplyListener<String, String> {
 
     @Override

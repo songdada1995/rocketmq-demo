@@ -27,7 +27,8 @@ import org.springframework.stereotype.Service;
  * 带返回值（泛型）的消费者
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.genericRequestTopic}", consumerGroup = "${demo.rocketmq.genericRequestConsumer}", selectorExpression = "${demo.rocketmq.tag}")
+@RocketMQMessageListener(topic = "${demo.rocketmq.genericRequestTopic}", selectorExpression = "${demo.rocketmq.tag}",
+        consumerGroup = "${demo.rocketmq.genericRequestConsumer}")
 public class ConsumerWithReplyGeneric implements RocketMQReplyListener<String, ProductWithPayload<String>> {
     @Override
     public ProductWithPayload<String> onMessage(String message) {

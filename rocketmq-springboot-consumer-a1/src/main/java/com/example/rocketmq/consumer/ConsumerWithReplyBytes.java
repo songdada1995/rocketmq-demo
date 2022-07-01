@@ -27,7 +27,8 @@ import org.springframework.stereotype.Service;
  * 带返回值（字节）的消费者
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.bytesRequestTopic}", consumerGroup = "${demo.rocketmq.bytesRequestConsumer}", selectorExpression = "${demo.rocketmq.tag}")
+@RocketMQMessageListener(topic = "${demo.rocketmq.bytesRequestTopic}", selectorExpression = "${demo.rocketmq.tag}",
+        consumerGroup = "${demo.rocketmq.bytesRequestConsumer}")
 public class ConsumerWithReplyBytes implements RocketMQReplyListener<MessageExt, byte[]> {
 
     @Override
