@@ -6,6 +6,8 @@ import com.example.rocketmq.domain.ProductWithPayload;
 import com.example.rocketmq.domain.User;
 import com.example.rocketmq.domain.common.MqMessage;
 import com.example.rocketmq.domain.common.Responses;
+import com.example.rocketmq.exception.BasicException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.spring.annotation.RocketMQTransactionListener;
@@ -34,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2022/6/7 22:40
  */
+@Slf4j
 @Service
 public class ProviderService {
 
@@ -134,9 +137,13 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /**
+     * 发送消息，自动把参数转换为消息体
+     *
+     * @param message
+     * @return
+     */
     public Responses msg7(MqMessage message) {
-        // 发送消息，自动把参数转换为消息体
-
         // tag0 will not be consumer-selected
         rocketMQTemplate.convertAndSend(msgExtTopic + ":tag0", "I'm from tag0，" + message.getMessage());
         System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag0");
@@ -146,8 +153,13 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /**
+     * 发送批量消息
+     *
+     * @param message
+     * @return
+     */
     public Responses msg8(MqMessage message) {
-        // 发送批量消息
         List<Message> msgs = new ArrayList<Message>();
         for (int i = 0; i < 10; i++) {
             msgs.add(MessageBuilder.withPayload("Hello " + message.getMessage() + ", RocketMQ Batch Msg#" + i).
@@ -160,8 +172,13 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /**
+     * 发送批量顺序消息
+     *
+     * @param message
+     * @return
+     */
     public Responses msg9(MqMessage message) {
-        // 发送批量顺序消息
         for (int q = 0; q < 4; q++) {
             // send to 4 queues
             List<Message> msgs = new ArrayList<Message>();
@@ -173,6 +190,7 @@ public class ProviderService {
             }
             // 相同hashKey，固定消息发送到同一个队列
             SendResult sr = rocketMQTemplate.syncSendOrderly(stringTopic, msgs, String.valueOf(q), 60000);
+            //rocketMQTemplate.asyncSendOrderly();
             System.out.println("--- Batch messages orderly to queue :" + sr.getMessageQueue().getQueueId() + " send result :" + sr);
         }
 
@@ -270,8 +288,32 @@ public class ProviderService {
 
 
     public Responses msg18(MqMessage message) {
-        SendResult sendResult = rocketMQTemplate.syncSend(msgExtTopic, MessageBuilder.withPayload(message.getMessage()).build());
-        System.out.printf("method msg18 syncSend to topic %s sendResult=%s %n", msgExtTopic, sendResult);
+
+        try {
+            // 同步发送
+            SendResult sendResult = rocketMQTemplate.syncSend(msgExtTopic, MessageBuilder.withPayload(message.getMessage()).build());
+            log.info("method msg18 syncSend to topic {} sendResult={}", msgExtTopic, sendResult);
+
+            // 异步发送
+//            rocketMQTemplate.asyncSend(msgExtTopic, MessageBuilder.withPayload(message.getMessage()).build(), new SendCallback() {
+//                @Override
+//                public void onSuccess(SendResult var1) {
+//                    log.info("method msg18 async onSucess SendResult={}", var1);
+//                }
+//
+//                @Override
+//                public void onException(Throwable var1) {
+//                    // 记录异常，处理消息发送失败
+//                    log.error("method msg18 async onException Throwable={}", var1);
+//                }
+//            });
+
+        } catch (Throwable e) {
+            // 记录异常，处理消息发送失败
+            log.error(BasicException.exceptionTrace(e));
+            throw e;
+        }
+
         return Responses.newInstance().succeed("执行成功！");
     }
 

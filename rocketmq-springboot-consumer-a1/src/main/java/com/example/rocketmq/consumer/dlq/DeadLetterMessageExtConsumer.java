@@ -28,7 +28,8 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@RocketMQMessageListener(topic = "%DLQ%${demo.rocketmq.message-ext-consumer-group}", consumerGroup = "${demo.rocketmq.dlq-message-ext-consumer-group}")
+@RocketMQMessageListener(topic = "%DLQ%${demo.rocketmq.message-ext-consumer-group}",
+        consumerGroup = "${demo.rocketmq.dlq-message-ext-consumer-group}")
 public class DeadLetterMessageExtConsumer implements RocketMQListener<MessageExt> {
 
     @Override

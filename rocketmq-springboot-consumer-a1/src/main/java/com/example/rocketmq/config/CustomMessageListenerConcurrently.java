@@ -40,7 +40,7 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
         context.setDelayLevelWhenNextConsume(2);
 
         MessageExt msg = msgs.get(0);
-        log.info("CustomMessageListenerConcurrently received msg: {}", msg);
+        log.info(">>>>> CustomMessageListenerConcurrently received msg: {} <<<<<", msg);
         try {
             String msgBody = new String(msg.getBody(), "utf-8");
             if ("msg_fail".equals(msgBody)) {
@@ -50,6 +50,7 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
                 log.info("====失败消息结束=====");
                 System.out.println(1 / 0);
             }
+            log.info(">>>>> CustomMessageListenerConcurrently 消息消费完成！ <<<<<");
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 
         } catch (Exception e) {

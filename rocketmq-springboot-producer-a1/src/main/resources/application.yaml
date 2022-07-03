@@ -12,7 +12,7 @@ rocketmq:
     # 生产者组
     group: my-producer-group1
     # 超时时间
-    sendMessageTimeout: 300000
+    sendMessageTimeout: 5000
     # 同步发送消息失败重试次数
     retry-times-when-send-failed: 4
     # 异步发送消息失败重试次数

@@ -28,8 +28,6 @@ public class AsyncMsgProducer {
         producer.setSendMsgTimeout(3000);
         // 启动Producer实例
         producer.start();
-        // 消息发送失败重试次数
-        producer.setRetryTimesWhenSendAsyncFailed(0);
 
         int messageCount = 10;
         // 根据消息数量实例化倒计时计算器
