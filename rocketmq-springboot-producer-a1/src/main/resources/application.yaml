@@ -7,12 +7,22 @@ spring:
 
 rocketmq:
   name-server: localhost:9876
+  # org.apache.rocketmq.spring.autoconfigure.RocketMQProperties.Producer
   producer:
-    group: my-group1
+    # 生产者组
+    group: my-producer-group1
+    # 超时时间
     sendMessageTimeout: 300000
-    # default producer tls config
+    # 同步发送消息失败重试次数
+    retry-times-when-send-failed: 4
+    # 异步发送消息失败重试次数
+    retry-times-when-send-async-failed: 4
     # TLS 通信加密
     tls-enable: false
+    # 可以将accessKey和secretKey理解成用户名和密码
+#    access-key: testACL
+    access-key: adminACL
+    secret-key: 12345678
 
 # properties used in the application
 demo:
@@ -22,7 +32,9 @@ demo:
     orderTopic: order-paid-topic
     msgExtTopic: message-ext-topic
     transTopic: spring-transaction-topic
-    exception-topic: exception-topic
+    denyTopic: deny-topic
+    onlySubTopic: only-sub-topic
+    defaultTestTopic: default-test-topic
 
     bytesRequestTopic: bytesRequestTopic:tagA
     stringRequestTopic: stringRequestTopic:tagA
@@ -33,5 +45,4 @@ demo:
     ext:
       useTLS: false
       nameServer: 127.0.0.1:9876
-    producer:
-      group: demo-producer-group
+    producer-group: demo-producer-group

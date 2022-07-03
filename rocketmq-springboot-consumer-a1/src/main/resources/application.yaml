@@ -8,10 +8,14 @@ spring:
 rocketmq:
   name-server: localhost:9876
   consumer:
-    group: my-group1
-    topic: test
+    group: my-consumer-group1
+    topic: default-test-topic
     # default LitePullConsumer TLS
     tlsEnable: false
+    # 可以将accessKey和secretKey理解成用户名和密码
+#    access-key: testACL
+    access-key: adminACL
+    secret-key: 12345678
 
 demo:
   rocketmq:
@@ -26,23 +30,20 @@ demo:
     objectRequestTopic: objectRequestTopic
     stringRequestTopic: stringRequestTopic
 
-    bytesRequestConsumer: bytesRequestConsumer
-    genericRequestConsumer: genericRequestConsumer
-    objectRequestConsumer: objectRequestConsumer
-    stringRequestConsumer: stringRequestConsumer
+    # 消费者组
+    bytesRequestConsumer: bytesRequestConsumerGroup
+    genericRequestConsumer: genericRequestConsumerGroup
+    objectRequestConsumer: objectRequestConsumerGroup
+    stringRequestConsumer: stringRequestConsumerGroup
+    consumer-group: demo-consumer-group
+    order-consumer-group: order-paid-consumer-group
+    trans-consumer-group: string-trans-consumer-group
+    user-consumer-group: user-consumer-group
+    string-newns-consumer-group: string-newns-consumer-group
+    message-ext-consumer-group: message-ext-consumer-group
 
-    consumer:
-      group: demo-consumer-group
-    order-consumer:
-      group: order-paid-consumer-group
-    trans-consumer:
-      group: string-trans-consumer-group
-    user-consumer:
-      group: user-consumer-group
-    string-newns-consumer:
-      group: string-newns-consumer-group
-    message-ext-consumer:
-      group: message-ext-consumer-group
+    # 死信队列消费者组
+    dlq-message-ext-consumer-group: dlq-message-ext-consumer-group
 
     tag: tagA
     # my Consumer TLS Listener

@@ -55,8 +55,13 @@ public class ProviderService {
     private String objectRequestTopic;
     @Value("${demo.rocketmq.genericRequestTopic}")
     private String genericRequestTopic;
-    @Value("${demo.rocketmq.exception-topic}")
-    private String exceptionTopic;
+
+    @Value("${demo.rocketmq.denyTopic}")
+    private String demoDenyTopic;
+    @Value("${demo.rocketmq.onlySubTopic}")
+    private String demoOnlySubTopic;
+    @Value("${demo.rocketmq.defaultTestTopic}")
+    private String demoDefaultTestTopic;
 
     @Resource
     private RocketMQTemplate rocketMQTemplate;
@@ -265,10 +270,8 @@ public class ProviderService {
 
 
     public Responses msg18(MqMessage message) {
-        // 发送同步消息，使用rocketMQTemplate，string-topic
-        SendResult sendResult = rocketMQTemplate.syncSend(exceptionTopic, MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build());
-        System.out.printf("syncSend2 to topic %s sendResult=%s %n", exceptionTopic, sendResult);
-
+        SendResult sendResult = rocketMQTemplate.syncSend(msgExtTopic, MessageBuilder.withPayload(message.getMessage()).build());
+        System.out.printf("method msg18 syncSend to topic %s sendResult=%s %n", msgExtTopic, sendResult);
         return Responses.newInstance().succeed("执行成功！");
     }
 

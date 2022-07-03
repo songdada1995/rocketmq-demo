@@ -24,7 +24,6 @@ public class ProducerController {
 
 
     /* =======================================同步消息 Start======================================== */
-
     /**
      * 发送同步消息，传递字符串参数
      *
@@ -79,9 +78,10 @@ public class ProducerController {
     public Responses msg5(@RequestBody MqMessage message) {
         return providerService.msg5(message);
     }
-
     /* =======================================同步消息 End======================================== */
 
+
+    /* =======================================异步消息 Start======================================== */
     /**
      * 发送异步消息，有回调
      *
@@ -92,6 +92,7 @@ public class ProducerController {
     public Responses msg6(@RequestBody MqMessage message) {
         return providerService.msg6(message);
     }
+    /* =======================================异步消息 End======================================== */
 
     /**
      * 发送消息，自动把参数转换为消息体

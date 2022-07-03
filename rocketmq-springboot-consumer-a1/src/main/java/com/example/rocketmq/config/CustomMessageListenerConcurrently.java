@@ -8,7 +8,6 @@ import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -41,9 +40,9 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
         context.setDelayLevelWhenNextConsume(2);
 
         MessageExt msg = msgs.get(0);
-        log.info("received msg: {}", msg);
+        log.info("CustomMessageListenerConcurrently received msg: {}", msg);
         try {
-            log.info("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+            log.info("{} Receive New Messages: {}", Thread.currentThread().getName(), msgs);
             String msgBody = new String(msg.getBody(), "utf-8");
             if ("msg_fail".equals(msgBody)) {
                 log.info("====失败消息开始=====");
@@ -56,7 +55,7 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
 
         } catch (Exception e) {
             log.warn("consume message failed. messageExt:{}", msg, e);
-            log.warn("-------最大重试次数为:" + msgs.get(0).getReconsumeTimes() + "次!-------");
+            log.warn("-------已重试次数为:" + msgs.get(0).getReconsumeTimes() + "次!-------");
             log.warn("-------延迟级别设置:" + context.getDelayLevelWhenNextConsume() + "-------");
             log.warn("当前时间:" + DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             if (msgs.get(0).getReconsumeTimes() > MAX_RECONSUME_TIMES) {

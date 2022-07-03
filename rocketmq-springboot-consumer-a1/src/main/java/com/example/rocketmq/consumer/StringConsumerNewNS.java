@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RocketMQMessageListener(nameServer = "${demo.rocketmq.myNameServer}", topic = "${demo.rocketmq.topic}",
-        consumerGroup = "${demo.rocketmq.string-newns-consumer.group}")
+        consumerGroup = "${demo.rocketmq.string-newns-consumer-group}")
 public class StringConsumerNewNS implements RocketMQListener<String> {
     @Override
     public void onMessage(String message) {

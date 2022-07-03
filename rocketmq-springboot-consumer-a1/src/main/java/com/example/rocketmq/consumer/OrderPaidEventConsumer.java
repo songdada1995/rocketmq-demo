@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RocketMQMessageListener(topic = "${demo.rocketmq.orderTopic}",
-        consumerGroup = "${demo.rocketmq.order-consumer.group}")
+        consumerGroup = "${demo.rocketmq.order-consumer-group}")
 public class OrderPaidEventConsumer implements RocketMQListener<OrderPaidEvent> {
 
     @Override

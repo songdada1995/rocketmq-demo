@@ -15,21 +15,26 @@
  * limitations under the License.
  */
 
-package com.example.rocketmq.consumer;
+package com.example.rocketmq.consumer.dlq;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Service;
 
 /**
- * StringConsumer
+ * 监听死信队列
  */
+@Slf4j
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.topic}", selectorExpression = "${demo.rocketmq.tag}",
-        consumerGroup = "${demo.rocketmq.consumer-group}", tlsEnable = "${demo.rocketmq.tlsEnable}")
-public class StringConsumer implements RocketMQListener<String> {
+@RocketMQMessageListener(topic = "%DLQ%${demo.rocketmq.message-ext-consumer-group}", consumerGroup = "${demo.rocketmq.dlq-message-ext-consumer-group}")
+public class DeadLetterMessageExtConsumer implements RocketMQListener<MessageExt> {
+
     @Override
-    public void onMessage(String message) {
-        System.out.printf("------- StringConsumer received: %s \n", message);
+    public void onMessage(MessageExt message) {
+        // 进入死信队列，可发送邮件预警通知
+        log.info("------- 进入死信队列，可通知相关开发人员!!! -------");
+        log.info("------- DeadLetterMessageExtConsumer received message, msgId: {}, body:{}", message.getMsgId(), new String(message.getBody()));
     }
 }
