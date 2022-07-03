@@ -42,7 +42,6 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
         MessageExt msg = msgs.get(0);
         log.info("CustomMessageListenerConcurrently received msg: {}", msg);
         try {
-            log.info("{} Receive New Messages: {}", Thread.currentThread().getName(), msgs);
             String msgBody = new String(msg.getBody(), "utf-8");
             if ("msg_fail".equals(msgBody)) {
                 log.info("====失败消息开始=====");
