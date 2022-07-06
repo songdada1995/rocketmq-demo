@@ -20,6 +20,10 @@ public class OrderService {
         // 1.Order写入数据库
         Thread.sleep(500);
 //        int count = tOrderMapper.insert(order);
+        /*
+         INSERT IGNORE INTO t_order (`order_no`, `order_qty`, `order_date`, `create_time`, `create_by`, `create_by_user_id`)
+         VALUES ('TR2022070501', '3', '2022-07-05 23:19:17', NOW(), 'system', '0') ;
+        */
         int count = 1;
 
         // 2.写入事务日志
@@ -30,9 +34,11 @@ public class OrderService {
             transactionLog.setBusinessForeignKey(String.valueOf(order.getId()));
 //            transactionLogMapper.insert(transactionLog);
             Thread.sleep(500);
+        } else {
+            throw new RuntimeException("订单已存在！");
         }
 
-        log.info("订单创建完成 {}", order);
+        log.info(">>> 订单创建完成 {} <<<", order);
     }
 
 }

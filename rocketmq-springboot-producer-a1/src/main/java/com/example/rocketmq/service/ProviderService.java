@@ -336,6 +336,12 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    /**
+     * 发送事务消息实现分布式事务数据最终一致性
+     *
+     * @param message
+     * @return
+     */
     @Transactional
     public Responses msg19(MqMessage message) {
 
@@ -351,7 +357,7 @@ public class ProviderService {
         // 发送订单事务消息
         SendResult sendOrderResult = extOrderRocketMQTemplate.sendMessageInTransaction(
                 transOrderTopic + ":" + transOrderTagOrder, msg, null);
-        log.info("------ 发送订单事务消息返回数据 msg body = {} , sendOrderResult sendStatus = {} ------", msg.getPayload(), sendOrderResult.getSendStatus());
+        log.info(">>> 发送订单事务消息返回数据 msg body = {} , sendOrderResult sendStatus = {} <<<", msg.getPayload(), sendOrderResult.getSendStatus());
 
         return Responses.newInstance().succeed("执行成功！");
     }
