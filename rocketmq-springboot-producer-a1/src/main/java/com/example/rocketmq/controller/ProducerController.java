@@ -24,6 +24,7 @@ public class ProducerController {
 
 
     /* =======================================同步消息 Start======================================== */
+
     /**
      * 发送同步消息，传递字符串参数
      *
@@ -82,6 +83,7 @@ public class ProducerController {
 
 
     /* =======================================异步消息 Start======================================== */
+
     /**
      * 发送异步消息，有回调
      *
@@ -229,7 +231,7 @@ public class ProducerController {
 
 
     /**
-     * 发送同步消息，使用rocketMQTemplate，string-topic
+     * 发送同步消息，使用rocketMQTemplate，msgExtTopic
      *
      * @param message
      * @return
@@ -237,6 +239,17 @@ public class ProducerController {
     @PostMapping(value = "/msg18")
     public Responses msg18(@RequestBody MqMessage message) {
         return providerService.msg18(message);
+    }
+
+    /**
+     * 发送事务消息以实现分布式事务数据最终一致性
+     *
+     * @param message
+     * @return
+     */
+    @PostMapping(value = "/msg19")
+    public Responses msg19(@RequestBody MqMessage message) {
+        return providerService.msg19(message);
     }
 
 }

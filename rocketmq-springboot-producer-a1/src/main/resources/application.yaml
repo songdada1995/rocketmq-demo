@@ -46,3 +46,11 @@ demo:
       useTLS: false
       nameServer: 127.0.0.1:9876
     producer-group: demo-producer-group
+
+order:
+  rocketmq:
+    name-server: 127.0.0.1:9876
+    tls-enable: false
+    topic: trans-order-topic
+    tag-order: tag-order
+    order-producer-group: trans-order-producer-group

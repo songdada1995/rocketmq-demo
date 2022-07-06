@@ -55,9 +55,9 @@ public class CustomMessageListenerConcurrently implements MessageListenerConcurr
 
         } catch (Exception e) {
             log.warn("consume message failed. messageExt:{}", msg, e);
+            log.warn("当前时间:" + DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             log.warn("-------已重试次数为:" + msgs.get(0).getReconsumeTimes() + "次!-------");
             log.warn("-------延迟级别设置:" + context.getDelayLevelWhenNextConsume() + "-------");
-            log.warn("当前时间:" + DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             if (msgs.get(0).getReconsumeTimes() > MAX_RECONSUME_TIMES) {
                 // 重试大于3次直接发往死信队列
                 context.setDelayLevelWhenNextConsume(-1);

@@ -6,6 +6,7 @@ import com.example.rocketmq.domain.ProductWithPayload;
 import com.example.rocketmq.domain.User;
 import com.example.rocketmq.domain.common.MqMessage;
 import com.example.rocketmq.domain.common.Responses;
+import com.example.rocketmq.domain.order.TOrder;
 import com.example.rocketmq.exception.BasicException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -16,18 +17,21 @@ import org.apache.rocketmq.spring.core.RocketMQLocalTransactionListener;
 import org.apache.rocketmq.spring.core.RocketMQLocalTransactionState;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
+import org.apache.rocketmq.spring.support.RocketMQMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeTypeUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -70,6 +74,21 @@ public class ProviderService {
     private RocketMQTemplate rocketMQTemplate;
     @Resource(name = "extRocketMQTemplate")
     private RocketMQTemplate extRocketMQTemplate;
+
+    @Resource(name = "extOrderRocketMQTemplate")
+    private RocketMQTemplate extOrderRocketMQTemplate;
+
+    @Value("${order.rocketmq.topic}")
+    private String transOrderTopic;
+    @Value("${order.rocketmq.tag-order}")
+    private String transOrderTagOrder;
+    @Resource(name = "orderService")
+    private OrderService orderService;
+    @Resource(name = "transactionLogService")
+    private TransactionLogService transactionLogService;
+    @Resource
+    private RocketMQMessageConverter rocketMQMessageConverter;
+
 
     public Responses msg1(MqMessage message) {
         // 发送同步消息，传递字符串参数
@@ -317,6 +336,26 @@ public class ProviderService {
         return Responses.newInstance().succeed("执行成功！");
     }
 
+    @Transactional
+    public Responses msg19(MqMessage message) {
+
+        // 构建订单数据
+        TOrder order = new TOrder().ready();
+        order.setId(123456789L);
+        order.setOrderNo("TR20220701");
+        order.setSku("TSK222222");
+        order.setRemark(message.getMessage());
+        String transactionId = UUID.randomUUID().toString().replace("-", "");
+        Message msg = MessageBuilder.withPayload(order).setHeader(RocketMQHeaders.TRANSACTION_ID, transactionId).build();
+
+        // 发送订单事务消息
+        SendResult sendOrderResult = extOrderRocketMQTemplate.sendMessageInTransaction(
+                transOrderTopic + ":" + transOrderTagOrder, msg, null);
+        log.info("------ 发送订单事务消息返回数据 msg body = {} , sendOrderResult sendStatus = {} ------", msg.getPayload(), sendOrderResult.getSendStatus());
+
+        return Responses.newInstance().succeed("执行成功！");
+    }
+
     /**
      * 发送事务消息
      *
@@ -450,5 +489,45 @@ public class ProviderService {
         }
     }
 
+    /**
+     * 订单事务监听器
+     */
+    @RocketMQTransactionListener(rocketMQTemplateBeanName = "extOrderRocketMQTemplate")
+    class ExtOrderTransactionListenerImpl implements RocketMQLocalTransactionListener {
+        @Override
+        public RocketMQLocalTransactionState executeLocalTransaction(Message msg, Object arg) {
+            log.info(">>> 开始执行订单本地事务 <<<");
+            log.info(">>> msg: {}, arg: {} <<<", msg, arg);
+            RocketMQLocalTransactionState state;
+            try {
+                // 创建Order
+                TOrder order = (TOrder) rocketMQMessageConverter.getMessageConverter().fromMessage(msg, TOrder.class);
+                String transactionId = (String) msg.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
+                orderService.createOrder(order, transactionId);
+
+                state = RocketMQLocalTransactionState.COMMIT;
+                log.info(">>> 订单本地事务已提交，TransactionId：{} <<<", transactionId);
+            } catch (Exception e) {
+                log.error("订单本地事务执行失败，e：{}", e);
+                state = RocketMQLocalTransactionState.ROLLBACK;
+            }
+            return state;
+        }
+
+        @Override
+        public RocketMQLocalTransactionState checkLocalTransaction(Message msg) {
+            String transactionId = (String) msg.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
+            log.info(">>> 开始回查订单本地事务状态，transactionId：{} <<<", transactionId);
+            RocketMQLocalTransactionState state;
+            // 校验订单是否写入数据库
+            if (transactionLogService.checkCount(transactionId) > 0) {
+                state = RocketMQLocalTransactionState.COMMIT;
+            } else {
+                state = RocketMQLocalTransactionState.UNKNOWN;
+            }
+            log.info(">>> 结束回查订单本地事务状态，state：{} <<<", state);
+            return state;
+        }
+    }
 
 }

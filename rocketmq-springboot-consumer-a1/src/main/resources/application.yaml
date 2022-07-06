@@ -55,3 +55,14 @@ demo:
   ext:
     consumer:
       tlsEnable: false
+
+# 订单
+order:
+  rocketmq:
+    topic: trans-order-topic
+    tag-order: tag-order
+    points-consumer-group: trans-order-points-consumer-group
+    stock-consumer-group: trans-order-stock-consumer-group
+    # 死信队列消费者组
+    dlq-points-consumer-group: dlq-points-consumer-group
+    dlq-stock-consumer-group: dlq-stock-consumer-group

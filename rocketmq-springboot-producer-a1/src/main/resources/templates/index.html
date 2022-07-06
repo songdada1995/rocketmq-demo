@@ -110,6 +110,11 @@
     Msg18-发送同步消息，测试消息消费正常和异常情况：<input id="msg18" name="message"/>
     <input type="button" value="发送消息" onclick="sendMsg18()"/>
 </div>
+<p/>
+<div>
+    Msg19-发送事务消息以实现分布式事务数据最终一致性：<input id="msg19" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg19()"/>
+</div>
 
 <script type="text/javascript">
     function sendMsg1() {
@@ -491,6 +496,28 @@
         $.ajax({
             type: "POST",
             url: "/provider/msg18",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg19() {
+        let params = {"message": $("#msg19").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg19",
             data: JSON.stringify(params),
             contentType: 'application/json', // 发送数据类型
             dataType: "json", // 返回数据类型
