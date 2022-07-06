@@ -47,9 +47,10 @@ public class OrderStockConsumer implements RocketMQListener<TOrder> {
     public void onMessage(TOrder tOrder) {
         log.info(">>>>> 订单库存消费者 onMessage received: {} [orderNo : {}] <<<<<", tOrder, tOrder.getOrderNo());
         try {
-            if (true) {
-                throw new RuntimeException("测试下游订单库存服务异常！");
-            }
+//            if (true) {
+//                throw new RuntimeException("测试下游订单库存服务异常！");
+//            }
+            Thread.sleep(4000);
             log.info(">>>>> 订单库存消费者 onMessage 消息消费完成！ <<<<<");
         } catch (Exception e) {
             log.warn("订单库存消费者 onMessage consume message failed e:{}", e);

@@ -70,9 +70,10 @@ public class OrderPointsConsumer implements RocketMQListener<TOrder>, RocketMQPu
                 try {
                     String msgBody = new String(msg.getBody(), "utf-8");
                     log.info(">>>>> 订单积分消费者 received msgBody: {} <<<<<", msgBody);
-                    if (true) {
-                        throw new RuntimeException("测试下游订单积分服务异常！");
-                    }
+//                    if (true) {
+//                        throw new RuntimeException("测试下游订单积分服务异常！");
+//                    }
+                    Thread.sleep(2000);
                     log.info(">>>>> 订单积分消费者 MessageListenerConcurrently 消息消费完成！ <<<<<");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 
