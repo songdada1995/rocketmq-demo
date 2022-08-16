@@ -19,7 +19,7 @@ rocketmq:
 
 demo:
   rocketmq:
-    topic: string-topic
+    string-topic: string-topic
     user-topic: user-topic
     orderTopic: order-paid-topic
     msgExtTopic: message-ext-topic

@@ -17,6 +17,8 @@
 
 package com.example.rocketmq.consumer;
 
+import org.apache.rocketmq.spring.annotation.ConsumeMode;
+import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,12 @@ import org.springframework.stereotype.Service;
  * StringConsumer
  */
 @Service
-@RocketMQMessageListener(topic = "${demo.rocketmq.topic}", selectorExpression = "${demo.rocketmq.tag}",
-        consumerGroup = "${demo.rocketmq.consumer-group}", tlsEnable = "${demo.rocketmq.tlsEnable}")
+@RocketMQMessageListener(topic = "${demo.rocketmq.string-topic}", selectorExpression = "${demo.rocketmq.tag}",
+        consumerGroup = "${demo.rocketmq.consumer-group}", tlsEnable = "${demo.rocketmq.tlsEnable}",
+        consumeMode = ConsumeMode.ORDERLY,
+        messageModel = MessageModel.CLUSTERING,
+        maxReconsumeTimes = 3,
+        delayLevelWhenNextConsume = 2)
 public class StringConsumer implements RocketMQListener<String> {
     @Override
     public void onMessage(String message) {

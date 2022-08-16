@@ -115,6 +115,11 @@
     Msg19-发送事务消息以实现分布式事务数据最终一致性：<input id="msg19" name="message"/>
     <input type="button" value="发送消息" onclick="sendMsg19()"/>
 </div>
+<p/>
+<div>
+    Msg20-发送延时消息：<input id="msg20" name="message"/>
+    <input type="button" value="发送消息" onclick="sendMsg20()"/>
+</div>
 
 <script type="text/javascript">
     function sendMsg1() {
@@ -518,6 +523,28 @@
         $.ajax({
             type: "POST",
             url: "/provider/msg19",
+            data: JSON.stringify(params),
+            contentType: 'application/json', // 发送数据类型
+            dataType: "json", // 返回数据类型
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    layer.msg(data.data, {time: 2000, icon: 1});
+                } else {
+                    layer.msg(data.error.message, {time: 2000, icon: 2});
+                }
+            },
+            error: function (e) {
+                layer.msg("Net error ,try later.", {time: 2000, icon: 2});
+            }
+        });
+    }
+
+    function sendMsg20() {
+        let params = {"message": $("#msg20").val()};
+        $.ajax({
+            type: "POST",
+            url: "/provider/msg20",
             data: JSON.stringify(params),
             contentType: 'application/json', // 发送数据类型
             dataType: "json", // 返回数据类型

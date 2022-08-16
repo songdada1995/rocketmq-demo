@@ -48,6 +48,7 @@ public class OrderPointsConsumer implements RocketMQListener<TOrder>, RocketMQPu
     @SneakyThrows
     @Override
     public void onMessage(TOrder tOrder) {
+        log.info(">>>>> 订单积分消费者 onMessage: {} <<<<<", tOrder.toString());
     }
 
     @Override

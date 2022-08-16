@@ -13,9 +13,10 @@ rocketmq:
     group: my-producer-group1
     # 超时时间
     sendMessageTimeout: 5000
-    # 同步发送消息失败重试次数
+    # 同步发送消息失败重试次数，默认为 2
+    # org.apache.rocketmq.client.producer.DefaultMQProducer
     retry-times-when-send-failed: 4
-    # 异步发送消息失败重试次数
+    # 异步发送消息失败重试次数，默认为 2
     retry-times-when-send-async-failed: 4
     # TLS 通信加密
     tls-enable: false
@@ -27,7 +28,7 @@ rocketmq:
 # properties used in the application
 demo:
   rocketmq:
-    topic: string-topic
+    string-topic: string-topic
     user-topic: user-topic
     orderTopic: order-paid-topic
     msgExtTopic: message-ext-topic

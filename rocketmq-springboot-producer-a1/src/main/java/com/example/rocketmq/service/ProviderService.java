@@ -21,7 +21,6 @@ import org.apache.rocketmq.spring.support.RocketMQMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,9 @@ import org.springframework.util.MimeTypeUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +45,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class ProviderService {
 
-    @Value("${demo.rocketmq.topic}")
+    @Value("${demo.rocketmq.string-topic}")
     private String stringTopic;
     @Value("${demo.rocketmq.user-topic}")
     private String userTopic;
@@ -201,7 +202,7 @@ public class ProviderService {
         for (int q = 0; q < 4; q++) {
             // send to 4 queues
             List<Message> msgs = new ArrayList<Message>();
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 4; i++) {
                 int msgIndex = q * 10 + i;
                 String msg = String.format("Hello " + message.getMessage() + ", RocketMQ Batch Msg#%d to queue: %d", msgIndex, q);
                 msgs.add(MessageBuilder.withPayload(msg).
@@ -209,7 +210,7 @@ public class ProviderService {
             }
             // 相同hashKey，固定消息发送到同一个队列
             SendResult sr = rocketMQTemplate.syncSendOrderly(stringTopic, msgs, String.valueOf(q), 60000);
-            //rocketMQTemplate.asyncSendOrderly();
+//            rocketMQTemplate.asyncSendOrderly();
             System.out.println("--- Batch messages orderly to queue :" + sr.getMessageQueue().getQueueId() + " send result :" + sr);
         }
 
@@ -218,14 +219,41 @@ public class ProviderService {
 
     public Responses msg10(MqMessage message) {
         // 发送事务消息 using rocketMQTemplate
-        testRocketMQTemplateTransaction(message.getMessage());
+        String[] tags = new String[]{"TagA", "TagB", "TagC", "TagD", "TagE"};
+        for (int i = 0; i < 10; i++) {
+            try {
+                Message msg = MessageBuilder.withPayload(message.getMessage() + ", rocketMQTemplate transactional message " + i).
+                        setHeader(RocketMQHeaders.TRANSACTION_ID, "KEY_" + i).build();
+                SendResult sendResult = rocketMQTemplate.sendMessageInTransaction(
+                        springTransTopic + ":" + tags[i % tags.length], msg, null);
+                System.out.printf("------rocketMQTemplate send Transactional msg body = %s , sendResult=%s %n",
+                        msg.getPayload(), sendResult.getSendStatus());
+
+                Thread.sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return Responses.newInstance().succeed("执行成功！");
     }
 
     public Responses msg11(MqMessage message) {
         // 发送事务消息 using extRocketMQTemplate
-        testExtRocketMQTemplateTransaction(message.getMessage());
+        for (int i = 0; i < 10; i++) {
+            try {
+                Message msg = MessageBuilder.withPayload(message.getMessage() + ", extRocketMQTemplate transactional message " + i).
+                        setHeader(RocketMQHeaders.TRANSACTION_ID, "KEY_" + i).build();
+                SendResult sendResult = extRocketMQTemplate.sendMessageInTransaction(
+                        springTransTopic, msg, null);
+                System.out.printf("------ExtRocketMQTemplate send Transactional msg body = %s , sendResult=%s %n",
+                        msg.getPayload(), sendResult.getSendStatus());
+
+                Thread.sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return Responses.newInstance().succeed("执行成功！");
     }
@@ -363,49 +391,24 @@ public class ProviderService {
     }
 
     /**
-     * 发送事务消息
+     * 发送延时消息
      *
-     * @throws MessagingException
+     * @param message
+     * @return
      */
-    private void testRocketMQTemplateTransaction(String message) throws MessagingException {
-        String[] tags = new String[]{"TagA", "TagB", "TagC", "TagD", "TagE"};
-        for (int i = 0; i < 10; i++) {
-            try {
+    public Responses msg20(MqMessage message) {
+        // 设置延时等级3,这个消息将在10s之后发送(现在只支持固定的几个时间,详看delayTimeLevel)
+        // org/apache/rocketmq/store/config/MessageStoreConfig.java
+        // private String messageDelayLevel = "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h";
+        // 现在RocketMq并不支持任意时间的延时，需要设置几个固定的延时等级，从1s到2h分别对应着等级1到18，
+        // 消息消费失败会进入延时消息队列，消息发送时间与设置的延时等级和重试次数有关，详见代码SendMessageProcessor.java
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-ss HH:mm:ss");
+        System.out.printf("%s msg20 to topic %s%n", dateFormat.format(new Date()), stringTopic);
+        SendResult sendResult = rocketMQTemplate.syncSend(stringTopic,
+                MessageBuilder.withPayload("Hello, " + message.getMessage() + "! I'm from spring message").build(), 3000, 3);
+        System.out.printf("%s msg20 to topic %s sendResult=%s%n", dateFormat.format(new Date()), stringTopic, sendResult);
 
-                Message msg = MessageBuilder.withPayload(message + ", rocketMQTemplate transactional message " + i).
-                        setHeader(RocketMQHeaders.TRANSACTION_ID, "KEY_" + i).build();
-                SendResult sendResult = rocketMQTemplate.sendMessageInTransaction(
-                        springTransTopic + ":" + tags[i % tags.length], msg, null);
-                System.out.printf("------rocketMQTemplate send Transactional msg body = %s , sendResult=%s %n",
-                        msg.getPayload(), sendResult.getSendStatus());
-
-                Thread.sleep(10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 发送事务消息
-     *
-     * @throws MessagingException
-     */
-    private void testExtRocketMQTemplateTransaction(String message) throws MessagingException {
-        for (int i = 0; i < 10; i++) {
-            try {
-                Message msg = MessageBuilder.withPayload(message + ", extRocketMQTemplate transactional message " + i).
-                        setHeader(RocketMQHeaders.TRANSACTION_ID, "KEY_" + i).build();
-                SendResult sendResult = extRocketMQTemplate.sendMessageInTransaction(
-                        springTransTopic, msg, null);
-                System.out.printf("------ExtRocketMQTemplate send Transactional msg body = %s , sendResult=%s %n",
-                        msg.getPayload(), sendResult.getSendStatus());
-
-                Thread.sleep(10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        return Responses.newInstance().succeed("执行成功！");
     }
 
     /**
@@ -421,26 +424,25 @@ public class ProviderService {
         @Override
         public RocketMQLocalTransactionState executeLocalTransaction(Message msg, Object arg) {
             String transId = (String) msg.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
-            System.out.printf("#### executeLocalTransaction is executed, msgTransactionId=%s %n",
-                    transId);
+            System.out.printf("#### executeLocalTransaction is executed, msgTransactionId=%s %n", transId);
             int value = transactionIndex.getAndIncrement();
             int status = value % 3;
             localTrans.put(transId, status);
             if (status == 0) {
                 // Return local transaction with success(commit), in this case,
                 // this message will not be checked in checkLocalTransaction()
-                System.out.printf("    # COMMIT # Simulating msg %s related local transaction exec succeeded! ### %n", msg.getPayload());
+                System.out.printf("COMMIT # Simulating msg %s related local transaction exec succeeded! ### %n", msg.getPayload());
                 return RocketMQLocalTransactionState.COMMIT;
             }
 
             if (status == 1) {
                 // Return local transaction with failure(rollback) , in this case,
                 // this message will not be checked in checkLocalTransaction()
-                System.out.printf("    # ROLLBACK # Simulating %s related local transaction exec failed! %n", msg.getPayload());
+                System.out.printf("ROLLBACK # Simulating %s related local transaction exec failed! %n", msg.getPayload());
                 return RocketMQLocalTransactionState.ROLLBACK;
             }
 
-            System.out.printf("    # UNKNOW # Simulating %s related local transaction exec UNKNOWN! \n");
+            System.out.printf("UNKNOW # Simulating %s related local transaction exec UNKNOWN! \n");
             return RocketMQLocalTransactionState.UNKNOWN;
         }
 
@@ -469,8 +471,7 @@ public class ProviderService {
                         break;
                 }
             }
-            System.out.printf("------ !!! checkLocalTransaction is executed once," +
-                            " msgTransactionId=%s, TransactionState=%s status=%s %n",
+            System.out.printf("------ !!! checkLocalTransaction is executed once, msgTransactionId=%s, TransactionState=%s status=%s %n",
                     transId, retState, status);
             return retState;
         }

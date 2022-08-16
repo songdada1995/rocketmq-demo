@@ -252,4 +252,14 @@ public class ProducerController {
         return providerService.msg19(message);
     }
 
+    /**
+     * 发送延时消息
+     *
+     * @param message
+     * @return
+     */
+    @PostMapping(value = "/msg20")
+    public Responses msg20(@RequestBody MqMessage message) {
+        return providerService.msg20(message);
+    }
 }

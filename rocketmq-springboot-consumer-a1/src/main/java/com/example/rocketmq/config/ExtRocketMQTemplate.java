@@ -15,7 +15,7 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
  * secretKey为空，则默认采用rocketmq.producer.secretKey:的配置
  */
 @ExtRocketMQConsumerConfiguration(
-        topic = "${demo.rocketmq.topic}",
+        topic = "${demo.rocketmq.string-topic}",
         group = "${demo.rocketmq.consumer-group}",
         tlsEnable = "${demo.ext.consumer.tlsEnable}")
 public class ExtRocketMQTemplate extends RocketMQTemplate {
