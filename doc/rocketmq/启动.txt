@@ -1,0 +1,78 @@
+
+
+修改namesrv和broker默认端口：
+1、在目录D:\RocketMQ-Learn\rocketmq\rocketmq-4.9.3\conf，新增namesrv.conf文件
+2、编辑文件，新增内容：
+listenPort=9988
+
+可参考：
+https://blog.csdn.net/one_week/article/details/120325345
+
+
+===================================
+
+
+启动namesrv
+
+cd D:\RocketMQ-Learn\rocketmq\rocketmq-4.9.3\bin
+
+D:
+
+启动命令：
+
+start mqnamesrv.cmd
+
+==  修改配置后命令 ==
+start mqnamesrv.cmd -c ../conf/namesrv.conf
+
+
+===================================
+
+
+启动broker
+
+cd D:\RocketMQ-Learn\rocketmq\rocketmq-4.9.3\bin
+
+D:
+
+启动命令：
+
+start mqbroker.cmd -n 127.0.0.1:9876 autoCreateTopicEnable=true
+
+****
+开启过滤消息
+使用SQL表达式筛选消息需修改配置文件/conf/broker.conf，追加enablePropertyFilter = true，启动broker需指定配置文件，以开启支持
+
+start mqbroker.cmd -n 127.0.0.1:9876 autoCreateTopicEnable=true -c ../conf/broker.conf
+
+===================================
+
+
+关闭namesrv broker
+
+cd D:\RocketMQ-Learn\rocketmq\rocketmq-4.9.3\bin
+
+D:
+
+mqshutdown namesrv
+
+mqshutdown broker
+
+
+
+
+
+
+bin/mqbroker 的一些可选参数：
+
+-c：指定配置文件路径
+-n：NameServer 的地址
+
+
+
+===================================
+启动broker无反应，win10系统，删除C:\Users\songbo\store，文件夹内内容
+
+
+
+
